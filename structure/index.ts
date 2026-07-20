@@ -21,4 +21,13 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('product').title('Sản phẩm').icon(PackageIcon),
       S.documentTypeListItem('category').title('Danh mục').icon(TagIcon),
       S.documentTypeListItem('article').title('Bài viết').icon(DocumentTextIcon),
+      S.divider(),
+      S.listItem()
+        .title('Sự kiện website')
+        .icon(DocumentTextIcon)
+        .child(
+          S.documentTypeList('webEvent')
+            .title('Sự kiện website')
+            .defaultOrdering([{field: 'occurredAt', direction: 'desc'}]),
+        ),
     ])
