@@ -1,0 +1,48 @@
+import {SearchIcon} from '@sanity/icons/Search'
+import {defineField, defineType} from 'sanity'
+
+export const seo = defineType({
+  name: 'seo',
+  title: 'SEO',
+  type: 'object',
+  icon: SearchIcon,
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Tiêu đề SEO',
+      description: 'Để trống để dùng tiêu đề chính của nội dung.',
+      type: 'string',
+      validation: (rule) => rule.max(60).warning('Tiêu đề SEO nên dài không quá 60 ký tự.'),
+    }),
+    defineField({
+      name: 'description',
+      title: 'Mô tả SEO',
+      description: 'Để trống để dùng mô tả hoặc đoạn trích của nội dung.',
+      type: 'text',
+      rows: 3,
+      validation: (rule) => rule.max(160).warning('Mô tả SEO nên dài không quá 160 ký tự.'),
+    }),
+    defineField({
+      name: 'image',
+      title: 'Ảnh chia sẻ mạng xã hội',
+      description: 'Khuyến nghị tỷ lệ 1200 × 630 px.',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Mô tả ảnh',
+          type: 'string',
+          validation: (rule) => rule.max(150),
+        }),
+      ],
+    }),
+    defineField({
+      name: 'noIndex',
+      title: 'Ẩn khỏi công cụ tìm kiếm',
+      description: 'Chỉ bật khi không muốn Google lập chỉ mục nội dung này.',
+      type: 'boolean',
+      initialValue: false,
+    }),
+  ],
+})
