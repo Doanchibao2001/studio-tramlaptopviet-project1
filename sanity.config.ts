@@ -19,6 +19,9 @@ export default defineConfig({
 
   document: {
     newDocumentOptions: (previous) =>
-      previous.filter((templateItem) => templateItem.templateId !== 'siteSettings'),
+      previous.filter(
+        (templateItem) =>
+          templateItem.templateId !== 'siteSettings' && templateItem.templateId !== 'webEvent',
+      ),
   },
 })
