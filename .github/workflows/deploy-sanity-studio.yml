@@ -3,7 +3,8 @@ name: Deploy Sanity Studio
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - 'schemaTypes/**'
       - 'structure.ts'
@@ -22,7 +23,6 @@ concurrency:
 
 jobs:
   deploy:
-    if: ${{ secrets.SANITY_AUTH_TOKEN != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -32,6 +32,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Verify deploy token
+        shell: bash
+        run: |
+          if [ -z "$SANITY_AUTH_TOKEN" ]; then
+            echo "Missing repository secret SANITY_AUTH_TOKEN"
+            exit 1
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
