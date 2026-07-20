@@ -4,5 +4,14 @@ import {blockContent} from './objects/blockContent'
 import {seo} from './objects/seo'
 import {product} from './product'
 import {siteSettings} from './siteSettings'
+import {webEvent} from './webEvent'
 
-export const schemaTypes = [seo, blockContent, category, product, article, siteSettings]
+export const schemaTypes = [
+  seo,
+  blockContent,
+  category,
+  product,
+  article,
+  siteSettings,
+  webEvent,
+]
