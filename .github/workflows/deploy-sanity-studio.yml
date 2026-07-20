@@ -1,0 +1,49 @@
+name: Deploy Sanity Studio
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'schemaTypes/**'
+      - 'structure.ts'
+      - 'sanity.config.ts'
+      - 'sanity.cli.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-sanity-studio.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-sanity-studio
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: ${{ secrets.SANITY_AUTH_TOKEN != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+      SANITY_STUDIO_URL: ${{ vars.SANITY_STUDIO_URL || 'tramlaptopviet-project1.sanity.studio' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate schema
+        run: npm run schema:validate
+
+      - name: Deploy Studio and schema
+        run: npx sanity deploy --yes --url "$SANITY_STUDIO_URL" --title "Trạm Laptop Việt" --schema-required
