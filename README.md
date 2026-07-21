@@ -14,6 +14,27 @@ Studio quản trị nội dung độc lập cho website Trạm Laptop Việt.
 - **Bài viết:** ảnh đại diện, nội dung Portable Text, danh mục tin tức, từ khóa và SEO.
 - **Danh mục:** dùng chung một kiểu tài liệu, phân biệt bằng trường `scope` (`product` hoặc `article`).
 
+## Xuất bản bài viết từ GitHub
+
+Workflow **Publish article to Sanity** nhận một file JSON hoặc Markdown và một ảnh, kiểm tra schema trước rồi mới ghi vào dataset `production`. Workflow chỉ chạy thủ công; không tự xuất bản khi push code.
+
+- Chạy dry-run trước (mặc định) để kiểm tra nội dung, ảnh và schema mà không cần token.
+- Khi dry-run đạt, chạy lại với `dry_run = false`.
+- Secret `SANITY_AUTH_TOKEN` phải nằm trong GitHub Environment `sanity-production`, dùng token Sanity có quyền ghi tối thiểu vào dataset `production`.
+- Nên cấu hình Environment yêu cầu chủ thương hiệu/CSO duyệt trước khi job publish được chạy.
+- Workflow có `contents: read`; token không được truyền vào job validate, log hoặc file trong repo.
+- Publisher tìm bài theo slug rồi `createOrReplace`, vì vậy chạy lại cùng slug sẽ cập nhật đúng bài thay vì tạo bản sao.
+
+File Markdown dùng front matter dạng `key: value`; object/array viết bằng JSON trên một dòng. Xem `scripts/fixtures/article.example.md`.
+
+Chạy cục bộ:
+
+```text
+node scripts/publish-article.mjs --input scripts/fixtures/article.example.md --image static/example.jpg --dry-run
+```
+
+Để publish, đặt `SANITY_AUTH_TOKEN` trong biến môi trường của tiến trình (không ghi vào `.env` được commit), bỏ `--dry-run`, và giữ `SANITY_DATASET=production`.
+
 `siteSettings` là singleton có document ID cố định `siteSettings`. Các tài liệu thông thường để Sanity tự tạo `_id`.
 
 ## Chạy local
