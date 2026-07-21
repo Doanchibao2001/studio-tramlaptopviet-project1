@@ -11,6 +11,7 @@ const eventLabels: Record<string, string> = {
   scroll_50: 'Cuộn 50%',
   scroll_90: 'Cuộn 90%',
   engaged_30s: 'Ở lại trên 30 giây',
+  heartbeat: 'Đang hoạt động',
 }
 
 export const webEvent = defineType({
@@ -112,6 +113,32 @@ export const webEvent = defineType({
       title: 'Ngôn ngữ trình duyệt',
       type: 'string',
       readOnly: true,
+    }),
+    defineField({
+      name: 'country',
+      title: 'Quốc gia (gần đúng)',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'region',
+      title: 'Tỉnh / vùng (gần đúng)',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'city',
+      title: 'Thành phố (gần đúng)',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'ipHash',
+      title: 'Mã IP ẩn danh theo ngày',
+      description: 'Mã HMAC rút gọn, thay đổi mỗi ngày và không lưu địa chỉ IP gốc.',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
     }),
   ],
   orderings: [
