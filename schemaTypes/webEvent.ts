@@ -11,6 +11,7 @@ const eventLabels: Record<string, string> = {
   scroll_50: 'Cuộn 50%',
   scroll_90: 'Cuộn 90%',
   engaged_30s: 'Ở lại trên 30 giây',
+  heartbeat: 'Đang hoạt động',
 }
 
 export const webEvent = defineType({
