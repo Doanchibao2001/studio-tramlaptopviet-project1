@@ -115,6 +115,13 @@ export const webEvent = defineType({
       readOnly: true,
     }),
     defineField({
+      name: 'visitorId',
+      title: 'Mã khách truy cập ẩn danh',
+      description: 'Mã ngẫu nhiên lưu trong trình duyệt để nhận biết khách quay lại; không chứa thông tin cá nhân.',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
       name: 'country',
       title: 'Quốc gia (gần đúng)',
       type: 'string',
