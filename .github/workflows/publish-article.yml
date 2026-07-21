@@ -1,0 +1,65 @@
+name: Publish article to Sanity
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_path:
+        description: Repository path to an article JSON or Markdown file
+        required: true
+        type: string
+      image_path:
+        description: Repository path or HTTPS URL for the cover/SEO image
+        required: true
+        type: string
+      dry_run:
+        description: Validate only; do not write to Sanity
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sanity-article-production
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm schema:validate
+      - name: Validate article input
+        env:
+          ARTICLE_INPUT_PATH: ${{ inputs.input_path }}
+          ARTICLE_IMAGE_PATH: ${{ inputs.image_path }}
+        run: node scripts/publish-article.mjs --input "$ARTICLE_INPUT_PATH" --image "$ARTICLE_IMAGE_PATH" --dry-run
+
+  publish:
+    if: ${{ !inputs.dry_run }}
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: sanity-production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Publish article
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_PROJECT_ID: qnykgwoz
+          SANITY_DATASET: production
+          ARTICLE_INPUT_PATH: ${{ inputs.input_path }}
+          ARTICLE_IMAGE_PATH: ${{ inputs.image_path }}
+        run: node scripts/publish-article.mjs --input "$ARTICLE_INPUT_PATH" --image "$ARTICLE_IMAGE_PATH"

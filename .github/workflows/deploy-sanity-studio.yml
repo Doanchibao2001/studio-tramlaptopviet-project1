@@ -11,7 +11,7 @@ on:
       - 'sanity.config.ts'
       - 'sanity.cli.ts'
       - 'package.json'
-      - 'package-lock.json'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/deploy-sanity-studio.yml'
 
 permissions:
@@ -41,17 +41,23 @@ jobs:
             exit 1
           fi
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Validate schema
-        run: npm run schema:validate
+        run: pnpm schema:validate
 
       - name: Deploy Studio and schema
-        run: npx sanity deploy --yes --url "$SANITY_STUDIO_URL" --title "Trạm Laptop Việt" --schema-required
+        run: pnpm exec sanity deploy --yes --url "$SANITY_STUDIO_URL" --title "Trạm Laptop Việt" --schema-required

@@ -11,8 +11,11 @@
     "dev": "sanity dev",
     "schema:deploy": "sanity schemas deploy --workspace default",
     "schema:validate": "sanity schemas validate --workspace default",
+    "lint": "eslint .",
     "seed": "sanity exec scripts/seed.ts --with-user-token",
-    "start": "sanity start"
+    "start": "sanity start",
+    "test": "node --test scripts/*.test.mjs",
+    "article:validate": "node scripts/publish-article.mjs --dry-run"
   },
   "keywords": [
     "sanity"
