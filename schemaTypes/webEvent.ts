@@ -114,6 +114,32 @@ export const webEvent = defineType({
       type: 'string',
       readOnly: true,
     }),
+    defineField({
+      name: 'country',
+      title: 'Quốc gia (gần đúng)',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'region',
+      title: 'Tỉnh / vùng (gần đúng)',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'city',
+      title: 'Thành phố (gần đúng)',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'ipHash',
+      title: 'Mã IP ẩn danh theo ngày',
+      description: 'Mã HMAC rút gọn, thay đổi mỗi ngày và không lưu địa chỉ IP gốc.',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+    }),
   ],
   orderings: [
     {
