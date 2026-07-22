@@ -4,7 +4,7 @@ Studio quản trị nội dung độc lập cho website Trạm Laptop Việt.
 
 - Sanity project: `qnykgwoz`
 - Dataset: `production`
-- Studio online: https://studio-tramlaptopviet-project1.sanity.studio
+- Studio chính thức: https://tramlaptopviet-project1.sanity.studio
 - Frontend nằm ở thư mục sibling `../clone`; không nhúng Studio vào ứng dụng Next.js.
 
 ## Nội dung quản trị
