@@ -8,22 +8,25 @@ export const article = defineType({
   type: 'document',
   icon: DocumentTextIcon,
   groups: [
-    {name: 'content', title: 'Nội dung', default: true},
-    {name: 'relations', title: 'Phân loại & liên quan'},
-    {name: 'seo', title: 'SEO'},
+    {name: 'content', title: '1. Viết bài', default: true},
+    {name: 'google', title: '2. Khách thấy trên Google (SEO)'},
+    {name: 'planning', title: '3. Gợi ý để viết bài (Keyword Plan)'},
+    {name: 'relations', title: '4. Sắp xếp bài viết'},
   ],
   initialValue: () => ({publishedAt: new Date().toISOString()}),
   fields: [
     defineField({
       name: 'title',
-      title: 'Tiêu đề',
+      title: 'Tên bài viết (H1)',
+      description:
+        'Đây là dòng chữ lớn khách thấy khi mở bài. Viết rõ bài nói về việc gì; ví dụ: “Pin laptop bị chai: Dấu hiệu và cách xử lý”.',
       type: 'string',
       group: 'content',
       validation: (rule) => rule.required().max(120),
     }),
     defineField({
       name: 'slug',
-      title: 'Đường dẫn',
+      title: 'Đường dẫn bài viết (Slug)',
       type: 'slug',
       group: 'content',
       options: {source: 'title', slugify},
@@ -37,7 +40,7 @@ export const article = defineType({
     }),
     defineField({
       name: 'excerpt',
-      title: 'Đoạn giới thiệu',
+      title: 'Đoạn giới thiệu ngắn (Excerpt)',
       description: 'Dùng ở danh sách bài viết và làm mô tả SEO dự phòng.',
       type: 'text',
       rows: 3,
@@ -79,6 +82,7 @@ export const article = defineType({
     defineField({
       name: 'body',
       title: 'Nội dung bài viết',
+      description: 'Chia bài thành các đoạn có tiêu đề nhỏ (H2/H3), trả lời đúng điều khách đang muốn biết và viết tự nhiên.',
       type: 'blockContent',
       group: 'content',
       validation: (rule) => rule.required().min(1),
@@ -94,11 +98,23 @@ export const article = defineType({
     }),
     defineField({
       name: 'keywords',
-      title: 'Từ khóa chủ đề',
+      title: 'Những câu khách có thể tìm (Keyword Cluster)',
+      description:
+        'Dòng đầu nhập câu quan trọng nhất. Các dòng sau nhập 2–5 câu liên quan. Đây là gợi ý cho người viết; khách không nhìn thấy ô này.',
       type: 'array',
-      group: 'relations',
-      of: [defineArrayMember({type: 'string'})],
-      validation: (rule) => rule.unique().max(10),
+      group: 'planning',
+      of: [
+        defineArrayMember({
+          type: 'string',
+          validation: (rule) =>
+            rule.min(3).max(80).warning('Mỗi từ khóa nên là một cụm rõ nghĩa, tối đa 80 ký tự.'),
+        }),
+      ],
+      validation: (rule) =>
+        rule
+          .unique()
+          .max(6)
+          .warning('Nhập câu quan trọng nhất ở dòng đầu và 2–5 câu liên quan bên dưới.'),
     }),
     defineField({
       name: 'relatedProducts',
@@ -110,9 +126,9 @@ export const article = defineType({
     }),
     defineField({
       name: 'seo',
-      title: 'SEO',
+      title: 'Cách bài xuất hiện trên Google (SEO)',
       type: 'seo',
-      group: 'seo',
+      group: 'google',
     }),
   ],
   preview: {
