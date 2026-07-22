@@ -12,8 +12,9 @@ export const article = defineType({
     {name: 'google', title: '2. Khách thấy trên Google (SEO)'},
     {name: 'planning', title: '3. Gợi ý để viết bài (Keyword Plan)'},
     {name: 'relations', title: '4. Sắp xếp bài viết'},
+    {name: 'workflow', title: '5. Duyệt & hẹn giờ đăng'},
   ],
-  initialValue: () => ({publishedAt: new Date().toISOString()}),
+  initialValue: () => ({workflowStatus: 'draft'}),
   fields: [
     defineField({
       name: 'title',
@@ -66,10 +67,52 @@ export const article = defineType({
     }),
     defineField({
       name: 'publishedAt',
-      title: 'Ngày đăng',
+      title: 'Ngày đã đăng',
+      description: 'Hệ thống tự điền khi bài được xuất bản. Không dùng ô này để hẹn lịch.',
       type: 'datetime',
-      group: 'content',
+      group: 'workflow',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'workflowStatus',
+      title: 'Trạng thái duyệt',
+      description: 'Chỉ bài “Đã duyệt – sẵn sàng đăng” mới được lịch tự động xuất bản.',
+      type: 'string',
+      group: 'workflow',
+      initialValue: 'draft',
+      options: {
+        layout: 'radio',
+        list: [
+          {title: 'Bản nháp', value: 'draft'},
+          {title: 'Chờ duyệt', value: 'pendingReview'},
+          {title: 'Cần sửa', value: 'changesRequested'},
+          {title: 'Đã duyệt – sẵn sàng đăng', value: 'approved'},
+          {title: 'Đã xuất bản', value: 'published'},
+        ],
+      },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'scheduledAt',
+      title: 'Giờ dự kiến xuất bản',
+      description: 'Chọn một trong ba khung giờ: 08:00, 13:00 hoặc 19:00 (giờ Việt Nam).',
+      type: 'datetime',
+      group: 'workflow',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const status = (context.parent as {workflowStatus?: string} | undefined)?.workflowStatus
+          return status === 'approved' && !value
+            ? 'Bài đã duyệt phải có giờ dự kiến xuất bản.'
+            : true
+        }),
+    }),
+    defineField({
+      name: 'approvalNote',
+      title: 'Ghi chú duyệt',
+      type: 'text',
+      rows: 2,
+      group: 'workflow',
+      validation: (rule) => rule.max(500),
     }),
     defineField({
       name: 'authorName',
