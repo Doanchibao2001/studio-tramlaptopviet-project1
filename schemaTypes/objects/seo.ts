@@ -9,9 +9,9 @@ export const seo = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: '👀 KHÁCH THẤY: Tiêu đề trên Google',
+      title: 'Dòng tiêu đề khách thấy trên Google',
       description:
-        'Dòng chữ lớn trong kết quả tìm kiếm. Đặt từ khóa chính gần đầu câu, khoảng 30–60 ký tự.',
+        'Viết ngắn gọn để khách muốn bấm xem. Nên dài khoảng 30–60 ký tự.',
       type: 'string',
       validation: (rule) =>
         rule
@@ -21,9 +21,9 @@ export const seo = defineType({
     }),
     defineField({
       name: 'description',
-      title: '👀 KHÁCH THẤY: Mô tả trên Google',
+      title: 'Dòng giới thiệu khách thấy trên Google',
       description:
-        'Đoạn chữ dưới tiêu đề tìm kiếm. Nêu lợi ích, nhắc từ khóa chính 1 lần, khoảng 110–160 ký tự.',
+        'Nói ngắn gọn khách sẽ biết hoặc làm được gì sau khi đọc bài. Nên dài khoảng 110–160 ký tự.',
       type: 'text',
       rows: 3,
       validation: (rule) =>
@@ -34,8 +34,8 @@ export const seo = defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Ảnh chia sẻ mạng xã hội',
-      description: 'Khuyến nghị tỷ lệ 1200 × 630 px.',
+      title: 'Ảnh hiện khi chia sẻ bài',
+      description: 'Ảnh khách thấy khi bài được chia sẻ lên Facebook, Zalo hoặc ứng dụng khác. Nên dùng ảnh 1200 × 630 px.',
       type: 'image',
       options: {hotspot: true},
       fields: [
@@ -49,8 +49,8 @@ export const seo = defineType({
     }),
     defineField({
       name: 'noIndex',
-      title: '🤖 GOOGLE ĐỌC: Ẩn bài khỏi tìm kiếm',
-      description: 'Bình thường phải để TẮT. Chỉ bật khi không muốn bài xuất hiện trên Google.',
+      title: 'Không cho bài xuất hiện trên Google',
+      description: 'Bình thường hãy để TẮT. Chỉ bật khi bạn thật sự không muốn khách tìm thấy bài này trên Google.',
       type: 'boolean',
       initialValue: false,
     }),

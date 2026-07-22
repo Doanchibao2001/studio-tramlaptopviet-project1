@@ -8,18 +8,18 @@ export const article = defineType({
   type: 'document',
   icon: DocumentTextIcon,
   groups: [
-    {name: 'content', title: '1. Nội dung bài', default: true},
-    {name: 'google', title: '2. 👀 Hiển thị trên Google'},
-    {name: 'planning', title: '3. 🧭 Kế hoạch content'},
-    {name: 'relations', title: '4. Phân loại & liên quan'},
+    {name: 'content', title: '1. Viết bài', default: true},
+    {name: 'google', title: '2. Khách thấy trên Google'},
+    {name: 'planning', title: '3. Gợi ý để viết bài'},
+    {name: 'relations', title: '4. Sắp xếp bài viết'},
   ],
   initialValue: () => ({publishedAt: new Date().toISOString()}),
   fields: [
     defineField({
       name: 'title',
-      title: '👀🤖 Tiêu đề bài — Khách và Google đều đọc',
+      title: 'Tên bài viết',
       description:
-        'KHÁCH thấy đây là tiêu đề lớn khi mở bài. GOOGLE dùng nó để hiểu bài nói về gì. Viết một câu rõ chủ đề, có từ khóa chính tự nhiên; ví dụ: “Pin laptop bị chai: Dấu hiệu và cách xử lý”.',
+        'Đây là dòng chữ lớn khách thấy khi mở bài. Viết rõ bài nói về việc gì; ví dụ: “Pin laptop bị chai: Dấu hiệu và cách xử lý”.',
       type: 'string',
       group: 'content',
       validation: (rule) => rule.required().max(120),
@@ -81,8 +81,8 @@ export const article = defineType({
     }),
     defineField({
       name: 'body',
-      title: '🤖 Nội dung bài — Google đọc để hiểu chủ đề',
-      description: 'Chia nội dung bằng H2/H3, trả lời đúng câu hỏi của khách và không lặp từ khóa máy móc.',
+      title: 'Nội dung bài viết',
+      description: 'Chia bài thành các đoạn có tiêu đề nhỏ, trả lời đúng điều khách đang muốn biết và viết tự nhiên.',
       type: 'blockContent',
       group: 'content',
       validation: (rule) => rule.required().min(1),
@@ -98,9 +98,9 @@ export const article = defineType({
     }),
     defineField({
       name: 'keywords',
-      title: '🧭 DÀNH CHO NGƯỜI VIẾT: Từ khóa & cụm content',
+      title: 'Những câu khách có thể tìm trên Google',
       description:
-        'Khách không nhìn thấy trường này. DÒNG 1 = TỪ KHÓA CHÍNH; dòng sau = 2–5 cụm bài liên quan. Google chỉ hiểu tốt khi các cụm này được giải đáp thật trong nội dung.',
+        'Dòng đầu nhập câu quan trọng nhất. Các dòng sau nhập 2–5 câu liên quan. Đây là gợi ý cho người viết; khách không nhìn thấy ô này.',
       type: 'array',
       group: 'planning',
       of: [
@@ -114,7 +114,7 @@ export const article = defineType({
         rule
           .unique()
           .max(6)
-          .warning('Nhập 1 từ khóa chính ở dòng đầu và 2–5 cụm liên quan bên dưới.'),
+          .warning('Nhập câu quan trọng nhất ở dòng đầu và 2–5 câu liên quan bên dưới.'),
     }),
     defineField({
       name: 'relatedProducts',
@@ -126,7 +126,7 @@ export const article = defineType({
     }),
     defineField({
       name: 'seo',
-      title: 'SEO',
+      title: 'Cách bài xuất hiện trên Google',
       type: 'seo',
       group: 'google',
     }),

@@ -337,9 +337,9 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'seoKeywords',
-      title: 'Cụm chủ đề SEO toàn website (Pillar)',
+      title: 'Những dịch vụ chính của website',
       description:
-        'CHỈ NHẬP NHÓM LỚN: “sửa laptop Gò Vấp”, “sửa MacBook”, “nâng cấp laptop”, “vệ sinh laptop”. Ý tưởng chi tiết nhập trong từng bài.',
+        'Chỉ nhập các nhóm lớn như “sửa laptop Gò Vấp”, “sửa MacBook”, “nâng cấp laptop”, “vệ sinh laptop”. Các ý chi tiết nhập trong từng bài viết.',
       type: 'array',
       group: 'seo',
       of: [defineArrayMember({type: 'string'})],
