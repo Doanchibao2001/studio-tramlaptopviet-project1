@@ -94,9 +94,9 @@ export const article = defineType({
     }),
     defineField({
       name: 'keywords',
-      title: '⭐ Từ khóa mục tiêu để xây content',
+      title: '⭐ NHẬP Ở ĐÂY: Từ khóa chính & cụm content',
       description:
-        'Ưu tiên trường này khi lên ý tưởng bài. Dòng 1 = từ khóa chính (chỉ 1 cụm). Các dòng sau = 2–5 từ khóa phụ cùng nhu cầu tìm kiếm. Ví dụ: “bảo quản pin laptop” → “pin laptop bị chai”, “cách sạc pin laptop”, “khi nào cần thay pin laptop”. Từ khóa phải xuất hiện tự nhiên trong tiêu đề, đoạn mở đầu và các mục H2/H3; không nhập các cụm không được giải đáp trong bài.',
+        'DÒNG 1 = TỪ KHÓA CHÍNH. Dòng sau = 2–5 cụm content liên quan. Ví dụ: “bảo quản pin laptop” → “pin laptop bị chai”, “cách sạc pin laptop”, “khi nào cần thay pin”.',
       type: 'array',
       group: 'seo',
       of: [
@@ -110,7 +110,7 @@ export const article = defineType({
         rule
           .unique()
           .max(6)
-          .warning('Nên dùng 1 từ khóa chính và 2–5 từ khóa phụ sát cùng một chủ đề.'),
+          .warning('Nhập 1 từ khóa chính ở dòng đầu và 2–5 cụm liên quan bên dưới.'),
     }),
     defineField({
       name: 'relatedProducts',

@@ -11,7 +11,7 @@ export const seo = defineType({
       name: 'title',
       title: 'Tiêu đề SEO',
       description:
-        'Viết cho kết quả Google, ưu tiên đặt từ khóa chính gần đầu câu. Chỉ dùng 1 từ khóa chính và viết tự nhiên. Để trống để dùng tiêu đề chính của nội dung.',
+        'ĐẶT TỪ KHÓA CHÍNH GẦN ĐẦU CÂU. Nên dài 30–60 ký tự.',
       type: 'string',
       validation: (rule) =>
         rule
@@ -23,7 +23,7 @@ export const seo = defineType({
       name: 'description',
       title: 'Mô tả SEO',
       description:
-        'Tóm tắt đúng nội dung và lợi ích người đọc nhận được; nên nhắc từ khóa chính một lần tự nhiên. Để trống để dùng mô tả hoặc đoạn trích của nội dung.',
+        'NHẮC TỪ KHÓA CHÍNH 1 LẦN. Viết lợi ích rõ ràng, khoảng 110–160 ký tự.',
       type: 'text',
       rows: 3,
       validation: (rule) =>
