@@ -337,8 +337,9 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'seoKeywords',
-      title: 'Từ khóa chủ đề chính',
-      description: 'Dùng để mô tả chủ đề website, không cần lặp lại quá nhiều biến thể.',
+      title: 'Cụm chủ đề SEO toàn website (Pillar)',
+      description:
+        'Chỉ nhập các nhóm dịch vụ lớn dùng lâu dài, ví dụ: “sửa laptop Gò Vấp”, “sửa MacBook”, “nâng cấp laptop”, “vệ sinh laptop”. Không dùng trường này để chứa toàn bộ ý tưởng bài viết; ý tưởng chi tiết nhập tại “⭐ Từ khóa mục tiêu để xây content” của từng bài.',
       type: 'array',
       group: 'seo',
       of: [defineArrayMember({type: 'string'})],

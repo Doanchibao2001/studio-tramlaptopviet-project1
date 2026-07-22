@@ -10,7 +10,8 @@ export const seo = defineType({
     defineField({
       name: 'title',
       title: 'Tiêu đề SEO',
-      description: 'Để trống để dùng tiêu đề chính của nội dung.',
+      description:
+        'Viết cho kết quả Google, ưu tiên đặt từ khóa chính gần đầu câu. Chỉ dùng 1 từ khóa chính và viết tự nhiên. Để trống để dùng tiêu đề chính của nội dung.',
       type: 'string',
       validation: (rule) =>
         rule
@@ -21,7 +22,8 @@ export const seo = defineType({
     defineField({
       name: 'description',
       title: 'Mô tả SEO',
-      description: 'Để trống để dùng mô tả hoặc đoạn trích của nội dung.',
+      description:
+        'Tóm tắt đúng nội dung và lợi ích người đọc nhận được; nên nhắc từ khóa chính một lần tự nhiên. Để trống để dùng mô tả hoặc đoạn trích của nội dung.',
       type: 'text',
       rows: 3,
       validation: (rule) =>

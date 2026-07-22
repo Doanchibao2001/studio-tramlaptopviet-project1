@@ -94,11 +94,23 @@ export const article = defineType({
     }),
     defineField({
       name: 'keywords',
-      title: 'Từ khóa chủ đề',
+      title: '⭐ Từ khóa mục tiêu để xây content',
+      description:
+        'Ưu tiên trường này khi lên ý tưởng bài. Dòng 1 = từ khóa chính (chỉ 1 cụm). Các dòng sau = 2–5 từ khóa phụ cùng nhu cầu tìm kiếm. Ví dụ: “bảo quản pin laptop” → “pin laptop bị chai”, “cách sạc pin laptop”, “khi nào cần thay pin laptop”. Từ khóa phải xuất hiện tự nhiên trong tiêu đề, đoạn mở đầu và các mục H2/H3; không nhập các cụm không được giải đáp trong bài.',
       type: 'array',
-      group: 'relations',
-      of: [defineArrayMember({type: 'string'})],
-      validation: (rule) => rule.unique().max(10),
+      group: 'seo',
+      of: [
+        defineArrayMember({
+          type: 'string',
+          validation: (rule) =>
+            rule.min(3).max(80).warning('Mỗi từ khóa nên là một cụm rõ nghĩa, tối đa 80 ký tự.'),
+        }),
+      ],
+      validation: (rule) =>
+        rule
+          .unique()
+          .max(6)
+          .warning('Nên dùng 1 từ khóa chính và 2–5 từ khóa phụ sát cùng một chủ đề.'),
     }),
     defineField({
       name: 'relatedProducts',
