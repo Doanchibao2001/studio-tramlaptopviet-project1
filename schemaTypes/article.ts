@@ -8,9 +8,10 @@ export const article = defineType({
   type: 'document',
   icon: DocumentTextIcon,
   groups: [
-    {name: 'content', title: 'Nội dung', default: true},
-    {name: 'relations', title: 'Phân loại & liên quan'},
-    {name: 'seo', title: 'SEO'},
+    {name: 'content', title: '1. Nội dung bài', default: true},
+    {name: 'google', title: '2. 👀 Hiển thị trên Google'},
+    {name: 'planning', title: '3. 🧭 Kế hoạch content'},
+    {name: 'relations', title: '4. Phân loại & liên quan'},
   ],
   initialValue: () => ({publishedAt: new Date().toISOString()}),
   fields: [
@@ -100,7 +101,7 @@ export const article = defineType({
       description:
         'Khách không nhìn thấy trường này. DÒNG 1 = TỪ KHÓA CHÍNH; dòng sau = 2–5 cụm bài liên quan. Google chỉ hiểu tốt khi các cụm này được giải đáp thật trong nội dung.',
       type: 'array',
-      group: 'seo',
+      group: 'planning',
       of: [
         defineArrayMember({
           type: 'string',
@@ -126,7 +127,7 @@ export const article = defineType({
       name: 'seo',
       title: 'SEO',
       type: 'seo',
-      group: 'seo',
+      group: 'google',
     }),
   ],
   preview: {
