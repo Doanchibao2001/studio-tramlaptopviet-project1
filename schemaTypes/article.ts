@@ -16,7 +16,8 @@ export const article = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Tiêu đề',
+      title: '👀🤖 Tiêu đề bài — Khách và Google đều đọc',
+      description: 'Đây là H1 trên trang. Viết rõ chủ đề và có từ khóa chính một cách tự nhiên.',
       type: 'string',
       group: 'content',
       validation: (rule) => rule.required().max(120),
@@ -78,7 +79,8 @@ export const article = defineType({
     }),
     defineField({
       name: 'body',
-      title: 'Nội dung bài viết',
+      title: '🤖 Nội dung bài — Google đọc để hiểu chủ đề',
+      description: 'Chia nội dung bằng H2/H3, trả lời đúng câu hỏi của khách và không lặp từ khóa máy móc.',
       type: 'blockContent',
       group: 'content',
       validation: (rule) => rule.required().min(1),
@@ -94,9 +96,9 @@ export const article = defineType({
     }),
     defineField({
       name: 'keywords',
-      title: '⭐ NHẬP Ở ĐÂY: Từ khóa chính & cụm content',
+      title: '🧭 DÀNH CHO NGƯỜI VIẾT: Từ khóa & cụm content',
       description:
-        'DÒNG 1 = TỪ KHÓA CHÍNH. Dòng sau = 2–5 cụm content liên quan. Ví dụ: “bảo quản pin laptop” → “pin laptop bị chai”, “cách sạc pin laptop”, “khi nào cần thay pin”.',
+        'Khách không nhìn thấy trường này. DÒNG 1 = TỪ KHÓA CHÍNH; dòng sau = 2–5 cụm bài liên quan. Google chỉ hiểu tốt khi các cụm này được giải đáp thật trong nội dung.',
       type: 'array',
       group: 'seo',
       of: [

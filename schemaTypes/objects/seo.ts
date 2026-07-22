@@ -9,9 +9,9 @@ export const seo = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Tiêu đề SEO',
+      title: '👀 KHÁCH THẤY: Tiêu đề trên Google',
       description:
-        'ĐẶT TỪ KHÓA CHÍNH GẦN ĐẦU CÂU. Nên dài 30–60 ký tự.',
+        'Dòng chữ lớn trong kết quả tìm kiếm. Đặt từ khóa chính gần đầu câu, khoảng 30–60 ký tự.',
       type: 'string',
       validation: (rule) =>
         rule
@@ -21,9 +21,9 @@ export const seo = defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Mô tả SEO',
+      title: '👀 KHÁCH THẤY: Mô tả trên Google',
       description:
-        'NHẮC TỪ KHÓA CHÍNH 1 LẦN. Viết lợi ích rõ ràng, khoảng 110–160 ký tự.',
+        'Đoạn chữ dưới tiêu đề tìm kiếm. Nêu lợi ích, nhắc từ khóa chính 1 lần, khoảng 110–160 ký tự.',
       type: 'text',
       rows: 3,
       validation: (rule) =>
@@ -49,8 +49,8 @@ export const seo = defineType({
     }),
     defineField({
       name: 'noIndex',
-      title: 'Ẩn khỏi công cụ tìm kiếm',
-      description: 'Chỉ bật khi không muốn Google lập chỉ mục nội dung này.',
+      title: '🤖 GOOGLE ĐỌC: Ẩn bài khỏi tìm kiếm',
+      description: 'Bình thường phải để TẮT. Chỉ bật khi không muốn bài xuất hiện trên Google.',
       type: 'boolean',
       initialValue: false,
     }),
