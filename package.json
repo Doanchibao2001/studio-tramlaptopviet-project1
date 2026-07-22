@@ -15,7 +15,8 @@
     "seed": "sanity exec scripts/seed.ts --with-user-token",
     "start": "sanity start",
     "test": "node --test scripts/*.test.mjs",
-    "article:validate": "node scripts/publish-article.mjs --dry-run"
+    "article:validate": "node scripts/publish-article.mjs --dry-run",
+    "article:batch:validate": "node scripts/import-article-batch.mjs --input scripts/fixtures/sanity-batch-330.json --dry-run"
   },
   "keywords": [
     "sanity"
