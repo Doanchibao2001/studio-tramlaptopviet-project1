@@ -1,0 +1,45 @@
+name: Import article batch to Sanity
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Validate only, without writing to Sanity
+        required: true
+        default: true
+        type: boolean
+      start_date:
+        description: First scheduled date (Vietnam time, YYYY-MM-DD)
+        required: true
+        default: '2026-07-23'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sanity-article-batch-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    environment: sanity-production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import 330 article drafts
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_PROJECT_ID: qnykgwoz
+          SANITY_DATASET: production
+          DRY_RUN: ${{ inputs.dry_run }}
+          START_DATE: ${{ inputs.start_date }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            node scripts/import-article-batch.mjs --input scripts/fixtures/sanity-batch-330.json --start-date "$START_DATE" --dry-run
+          else
+            node scripts/import-article-batch.mjs --input scripts/fixtures/sanity-batch-330.json --start-date "$START_DATE"
+          fi
