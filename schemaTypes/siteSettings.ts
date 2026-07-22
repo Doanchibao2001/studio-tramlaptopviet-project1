@@ -9,6 +9,7 @@ export const siteSettings = defineType({
   groups: [
     {name: 'general', title: 'Thông tin chung', default: true},
     {name: 'hero', title: 'Hero & CTA'},
+    {name: 'homepage', title: 'Nội dung trang chủ'},
     {name: 'popup', title: 'Popup chuyển đổi'},
     {name: 'locations', title: 'Cửa hàng'},
     {name: 'footer', title: 'Footer'},
@@ -137,6 +138,83 @@ export const siteSettings = defineType({
       validation: (rule) => rule.required().max(40),
     }),
     defineField({
+      name: 'services',
+      title: 'Dịch vụ nổi bật',
+      description: 'Các thẻ dịch vụ hiển thị trên trang chủ. Nên giữ từ 3–6 mục.',
+      type: 'array',
+      group: 'homepage',
+      of: [
+        defineArrayMember({
+          name: 'serviceCard',
+          title: 'Dịch vụ',
+          type: 'object',
+          fields: [
+            defineField({name: 'title', title: 'Tên dịch vụ', type: 'string', validation: (rule) => rule.required().max(60)}),
+            defineField({name: 'description', title: 'Mô tả', type: 'text', rows: 2, validation: (rule) => rule.required().max(160)}),
+          ],
+          preview: {select: {title: 'title', subtitle: 'description'}},
+        }),
+      ],
+      validation: (rule) => rule.min(3).max(6),
+    }),
+    defineField({
+      name: 'processSteps',
+      title: 'Quy trình sửa chữa',
+      type: 'array',
+      group: 'homepage',
+      of: [
+        defineArrayMember({
+          name: 'processStep',
+          title: 'Bước',
+          type: 'object',
+          fields: [
+            defineField({name: 'title', title: 'Tên bước', type: 'string', validation: (rule) => rule.required().max(60)}),
+            defineField({name: 'description', title: 'Mô tả', type: 'string', validation: (rule) => rule.required().max(140)}),
+          ],
+          preview: {select: {title: 'title', subtitle: 'description'}},
+        }),
+      ],
+      validation: (rule) => rule.min(3).max(6),
+    }),
+    defineField({
+      name: 'homepageSeoHeading',
+      title: 'Tiêu đề nội dung SEO trang chủ',
+      description: 'Một H2 tự nhiên, có dịch vụ và khu vực chính. Không nhồi từ khóa.',
+      type: 'string',
+      group: 'homepage',
+      validation: (rule) => rule.required().min(20).max(90),
+    }),
+    defineField({
+      name: 'homepageSeoParagraphs',
+      title: 'Đoạn giới thiệu SEO trang chủ',
+      type: 'array',
+      group: 'homepage',
+      of: [defineArrayMember({type: 'text', rows: 3})],
+      validation: (rule) => rule.min(1).max(3),
+    }),
+    defineField({
+      name: 'faqs',
+      title: 'Câu hỏi thường gặp',
+      description: 'Hiển thị trên trang chủ và tạo dữ liệu FAQ cho công cụ tìm kiếm.',
+      type: 'array',
+      group: 'homepage',
+      of: [
+        defineArrayMember({
+          name: 'faq',
+          title: 'Câu hỏi',
+          type: 'object',
+          fields: [
+            defineField({name: 'question', title: 'Câu hỏi', type: 'string', validation: (rule) => rule.required().max(140)}),
+            defineField({name: 'answer', title: 'Câu trả lời', type: 'text', rows: 3, validation: (rule) => rule.required().max(500)}),
+          ],
+          preview: {select: {title: 'question', subtitle: 'answer'}},
+        }),
+      ],
+      validation: (rule) => rule.min(2).max(8),
+    }),
+    defineField({name: 'consultHeading', title: 'Tiêu đề form tư vấn', type: 'string', group: 'homepage', validation: (rule) => rule.required().max(100)}),
+    defineField({name: 'consultDescription', title: 'Mô tả form tư vấn', type: 'string', group: 'homepage', validation: (rule) => rule.required().max(180)}),
+    defineField({
       name: 'popupHeadline',
       title: 'Tiêu đề Popup',
       type: 'string',
@@ -256,6 +334,15 @@ export const siteSettings = defineType({
       title: 'SEO mặc định',
       type: 'seo',
       group: 'seo',
+    }),
+    defineField({
+      name: 'seoKeywords',
+      title: 'Từ khóa chủ đề chính',
+      description: 'Dùng để mô tả chủ đề website, không cần lặp lại quá nhiều biến thể.',
+      type: 'array',
+      group: 'seo',
+      of: [defineArrayMember({type: 'string'})],
+      validation: (rule) => rule.max(12).unique(),
     }),
   ],
   preview: {
