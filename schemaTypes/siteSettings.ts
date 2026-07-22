@@ -337,7 +337,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'seoKeywords',
-      title: 'Những dịch vụ chính của website',
+      title: 'Những dịch vụ chính của website (Topic Pillar)',
       description:
         'Chỉ nhập các nhóm lớn như “sửa laptop Gò Vấp”, “sửa MacBook”, “nâng cấp laptop”, “vệ sinh laptop”. Các ý chi tiết nhập trong từng bài viết.',
       type: 'array',

@@ -9,15 +9,15 @@ export const article = defineType({
   icon: DocumentTextIcon,
   groups: [
     {name: 'content', title: '1. Viết bài', default: true},
-    {name: 'google', title: '2. Khách thấy trên Google'},
-    {name: 'planning', title: '3. Gợi ý để viết bài'},
+    {name: 'google', title: '2. Khách thấy trên Google (SEO)'},
+    {name: 'planning', title: '3. Gợi ý để viết bài (Keyword Plan)'},
     {name: 'relations', title: '4. Sắp xếp bài viết'},
   ],
   initialValue: () => ({publishedAt: new Date().toISOString()}),
   fields: [
     defineField({
       name: 'title',
-      title: 'Tên bài viết',
+      title: 'Tên bài viết (H1)',
       description:
         'Đây là dòng chữ lớn khách thấy khi mở bài. Viết rõ bài nói về việc gì; ví dụ: “Pin laptop bị chai: Dấu hiệu và cách xử lý”.',
       type: 'string',
@@ -26,7 +26,7 @@ export const article = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Đường dẫn',
+      title: 'Đường dẫn bài viết (Slug)',
       type: 'slug',
       group: 'content',
       options: {source: 'title', slugify},
@@ -40,7 +40,7 @@ export const article = defineType({
     }),
     defineField({
       name: 'excerpt',
-      title: 'Đoạn giới thiệu',
+      title: 'Đoạn giới thiệu ngắn (Excerpt)',
       description: 'Dùng ở danh sách bài viết và làm mô tả SEO dự phòng.',
       type: 'text',
       rows: 3,
@@ -82,7 +82,7 @@ export const article = defineType({
     defineField({
       name: 'body',
       title: 'Nội dung bài viết',
-      description: 'Chia bài thành các đoạn có tiêu đề nhỏ, trả lời đúng điều khách đang muốn biết và viết tự nhiên.',
+      description: 'Chia bài thành các đoạn có tiêu đề nhỏ (H2/H3), trả lời đúng điều khách đang muốn biết và viết tự nhiên.',
       type: 'blockContent',
       group: 'content',
       validation: (rule) => rule.required().min(1),
@@ -98,7 +98,7 @@ export const article = defineType({
     }),
     defineField({
       name: 'keywords',
-      title: 'Những câu khách có thể tìm trên Google',
+      title: 'Những câu khách có thể tìm (Keyword Cluster)',
       description:
         'Dòng đầu nhập câu quan trọng nhất. Các dòng sau nhập 2–5 câu liên quan. Đây là gợi ý cho người viết; khách không nhìn thấy ô này.',
       type: 'array',
@@ -126,7 +126,7 @@ export const article = defineType({
     }),
     defineField({
       name: 'seo',
-      title: 'Cách bài xuất hiện trên Google',
+      title: 'Cách bài xuất hiện trên Google (SEO)',
       type: 'seo',
       group: 'google',
     }),
