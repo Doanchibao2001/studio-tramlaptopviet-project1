@@ -12,7 +12,11 @@ export const seo = defineType({
       title: 'Tiêu đề SEO',
       description: 'Để trống để dùng tiêu đề chính của nội dung.',
       type: 'string',
-      validation: (rule) => rule.max(60).warning('Tiêu đề SEO nên dài không quá 60 ký tự.'),
+      validation: (rule) =>
+        rule
+          .min(30)
+          .max(60)
+          .warning('Tiêu đề SEO nên dài khoảng 30–60 ký tự.'),
     }),
     defineField({
       name: 'description',
@@ -20,7 +24,11 @@ export const seo = defineType({
       description: 'Để trống để dùng mô tả hoặc đoạn trích của nội dung.',
       type: 'text',
       rows: 3,
-      validation: (rule) => rule.max(160).warning('Mô tả SEO nên dài không quá 160 ký tự.'),
+      validation: (rule) =>
+        rule
+          .min(110)
+          .max(160)
+          .warning('Mô tả SEO nên dài khoảng 110–160 ký tự.'),
     }),
     defineField({
       name: 'image',
@@ -33,7 +41,7 @@ export const seo = defineType({
           name: 'alt',
           title: 'Mô tả ảnh',
           type: 'string',
-          validation: (rule) => rule.max(150),
+          validation: (rule) => rule.required().max(150),
         }),
       ],
     }),
