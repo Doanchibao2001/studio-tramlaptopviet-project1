@@ -18,7 +18,8 @@ export const article = defineType({
     defineField({
       name: 'title',
       title: '👀🤖 Tiêu đề bài — Khách và Google đều đọc',
-      description: 'Đây là H1 trên trang. Viết rõ chủ đề và có từ khóa chính một cách tự nhiên.',
+      description:
+        'KHÁCH thấy đây là tiêu đề lớn khi mở bài. GOOGLE dùng nó để hiểu bài nói về gì. Viết một câu rõ chủ đề, có từ khóa chính tự nhiên; ví dụ: “Pin laptop bị chai: Dấu hiệu và cách xử lý”.',
       type: 'string',
       group: 'content',
       validation: (rule) => rule.required().max(120),
