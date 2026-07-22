@@ -1,0 +1,39 @@
+name: Approve imported article batch
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Validate only, without approving drafts
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sanity-article-batch-approval
+  cancel-in-progress: false
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    environment: sanity-production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Approve all 326 imported drafts
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_PROJECT_ID: qnykgwoz
+          SANITY_DATASET: production
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            node scripts/approve-article-batch.mjs --input scripts/fixtures/sanity-batch-330.json --dry-run
+          else
+            node scripts/approve-article-batch.mjs --input scripts/fixtures/sanity-batch-330.json
+          fi
