@@ -21,7 +21,7 @@ async function sanityRequest(route, {method = 'GET', body} = {}) {
 }
 
 async function query(groq, params = {}) {
-  const search = new URLSearchParams({query: groq})
+  const search = new URLSearchParams({query: groq, perspective: 'raw'})
   for (const [key, value] of Object.entries(params)) search.set(`$${key}`, JSON.stringify(value))
   return (await sanityRequest(`/data/query/${DATASET}?${search}`)).result
 }
