@@ -1,11 +1,13 @@
 import {SearchIcon} from '@sanity/icons/Search'
 import {defineField, defineType} from 'sanity'
+import {SeoPreviewInput} from '../../components/SeoPreviewInput'
 
 export const seo = defineType({
   name: 'seo',
   title: 'SEO',
   type: 'object',
   icon: SearchIcon,
+  components: {input: SeoPreviewInput},
   fields: [
     defineField({
       name: 'title',
