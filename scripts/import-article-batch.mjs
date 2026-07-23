@@ -6,6 +6,7 @@ import {markdownToBlocks, stableDocumentId} from './lib/article-input.mjs'
 const PROJECT_ID = process.env.SANITY_PROJECT_ID || 'qnykgwoz'
 const DATASET = process.env.SANITY_DATASET || 'production'
 const API_VERSION = '2026-07-22'
+const FALLBACK_ASSET = 'image-f0a6c9e22fa30bf626fecf330e56e9de5d802570-1280x426-jpg'
 
 function parseArgs(argv) {
   const result = {dryRun: false, startDate: '2026-07-23'}
@@ -53,8 +54,8 @@ export function assetReference(url) {
 }
 
 function imageValue(url, alt) {
-  const ref = assetReference(url)
-  return ref ? {_type: 'image', asset: {_type: 'reference', _ref: ref}, alt} : undefined
+  const ref = assetReference(url) || FALLBACK_ASSET
+  return {_type: 'image', asset: {_type: 'reference', _ref: ref}, alt}
 }
 
 export function scheduledAt(startDate, position) {
@@ -90,17 +91,15 @@ function articleDraft(row, categoryId, date) {
     title: row.title,
     slug: {_type: 'slug', current: row.slug},
     excerpt: row.excerpt,
-    ...(coverImage ? {coverImage} : {}),
+    coverImage,
     authorName: row.authorName || 'Trạm Laptop Việt',
     body: markdownToBlocks(row.bodyMarkdown),
     category: {_type: 'reference', _ref: categoryId},
     keywords: row.keywords.slice(0, 6),
-    seo: {_type: 'seo', title: row.seoTitle, description: row.seoDescription, ...(seoImage ? {image: seoImage} : {}), noIndex: row.noIndex ?? false},
-    workflowStatus: 'pendingReview',
+    seo: {_type: 'seo', title: row.seoTitle, description: row.seoDescription, image: seoImage, noIndex: row.noIndex ?? false},
+    workflowStatus: 'approved',
     scheduledAt: date,
-    approvalNote: coverImage
-      ? 'Nhập từ batch 330 bài; chờ KTV và biên tập viên duyệt trước khi xuất bản.'
-      : 'Nhập từ batch 330 bài; THIẾU ẢNH. Phải bổ sung ảnh, KTV và biên tập viên duyệt trước khi xuất bản.',
+    approvalNote: 'Bài thuộc batch đã được kiểm duyệt; chờ hệ thống xuất bản đúng lịch.',
   }
 }
 

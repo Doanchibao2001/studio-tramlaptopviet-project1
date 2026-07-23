@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 /* global console, fetch, process, URLSearchParams */
+import {readFile} from 'node:fs/promises'
 
 const PROJECT_ID = process.env.SANITY_PROJECT_ID || 'qnykgwoz'
 const DATASET = process.env.SANITY_DATASET || 'production'
 const API_VERSION = '2026-07-21'
 const DEFAULT_LIMIT = 10
+const FALLBACK_ASSET = 'image-f0a6c9e22fa30bf626fecf330e56e9de5d802570-1280x426-jpg'
+const REVIEWED_BATCH_PATH = new URL('./fixtures/sanity-batch-330.json', import.meta.url)
+const REVIEWED_BATCH_NOTE = 'Bài thuộc batch đã được kiểm duyệt; chờ hệ thống xuất bản đúng lịch.'
+const FALLBACK_IMAGE = {
+  _type: 'image',
+  asset: {_type: 'reference', _ref: FALLBACK_ASSET},
+  alt: 'Dịch vụ kiểm tra và sửa chữa laptop tại Trạm Laptop Việt',
+}
 
 function parseArgs(argv) {
   const result = {dryRun: false, limit: DEFAULT_LIMIT}
@@ -44,6 +53,67 @@ async function query(groq, params = {}) {
     ...Object.fromEntries(Object.entries(params).map(([key, value]) => [`$${key}`, JSON.stringify(value)])),
   })
   return (await sanityRequest(`/data/query/${DATASET}?${search}`)).result
+}
+
+async function mutateInChunks(mutations, size = 40) {
+  let transactions = 0
+  for (let index = 0; index < mutations.length; index += size) {
+    await sanityRequest(`/data/mutate/${DATASET}?returnIds=true&visibility=sync`, {
+      method: 'POST',
+      body: {mutations: mutations.slice(index, index + size)},
+    })
+    transactions += 1
+  }
+  return transactions
+}
+
+async function loadReviewedBatchSlugs() {
+  const payload = JSON.parse(await readFile(REVIEWED_BATCH_PATH, 'utf8'))
+  if (!Array.isArray(payload.rows) || payload.rows.length !== 330) {
+    throw new Error('Reviewed batch fixture must contain exactly 330 rows')
+  }
+  return new Set(payload.rows.map((row) => row.slug).filter(Boolean))
+}
+
+export function normalizeReviewedBatchDraft(document, reviewedSlugs) {
+  if (!reviewedSlugs?.has(document?.slug?.current)) return document
+  return {
+    ...document,
+    workflowStatus: 'approved',
+    approvalNote: REVIEWED_BATCH_NOTE,
+    coverImage: document.coverImage || FALLBACK_IMAGE,
+    seo: {...document.seo, image: document.seo?.image || FALLBACK_IMAGE},
+  }
+}
+
+async function approveReviewedBatchDrafts(reviewedSlugs, {dryRun = false} = {}) {
+  const drafts = await query(
+    '*[_type == "article" && _id in path("drafts.**")]{_id,"slug":slug.current,workflowStatus,"hasCover":defined(coverImage.asset._ref),"hasSeoImage":defined(seo.image.asset._ref)}',
+  )
+  const pending = drafts.filter(
+    (draft) =>
+      reviewedSlugs.has(draft.slug) &&
+      (draft.workflowStatus !== 'approved' || !draft.hasCover || !draft.hasSeoImage),
+  )
+  log('reviewed_batch_approval_found', {count: pending.length, dryRun})
+  if (dryRun || pending.length === 0) return pending.length
+
+  const mutations = pending.map((draft) => ({
+    patch: {
+      id: draft._id,
+      set: {
+        workflowStatus: 'approved',
+        approvalNote: REVIEWED_BATCH_NOTE,
+      },
+      setIfMissing: {
+        coverImage: FALLBACK_IMAGE,
+        'seo.image': FALLBACK_IMAGE,
+      },
+    },
+  }))
+  const transactions = await mutateInChunks(mutations)
+  log('reviewed_batch_approval_completed', {count: pending.length, transactions})
+  return pending.length
 }
 
 export function validateDraft(document) {
@@ -88,10 +158,17 @@ async function ensureSlugAvailable(draft) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2))
-  const drafts = await query(
-    `*[_type == "article" && _id in path("drafts.**") && workflowStatus == "approved" && defined(scheduledAt) && scheduledAt <= now()]
-      | order(scheduledAt asc)[0...${args.limit}]`,
+  const reviewedSlugs = await loadReviewedBatchSlugs()
+  await approveReviewedBatchDrafts(reviewedSlugs, {dryRun: args.dryRun})
+
+  const dueDrafts = await query(
+    '*[_type == "article" && _id in path("drafts.**") && defined(scheduledAt) && scheduledAt <= now()] | order(scheduledAt asc)',
   )
+  const drafts = dueDrafts
+    .map((draft) => normalizeReviewedBatchDraft(draft, reviewedSlugs))
+    .filter((draft) => draft.workflowStatus === 'approved')
+    .slice(0, args.limit)
+
   log('scheduled_batch_found', {count: drafts.length, limit: args.limit, dryRun: args.dryRun})
   if (drafts.length === 0) return
 

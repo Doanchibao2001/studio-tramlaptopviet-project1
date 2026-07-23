@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import {buildPublishedDocument, validateDraft} from './publish-scheduled-articles.mjs'
+import {
+  buildPublishedDocument,
+  normalizeReviewedBatchDraft,
+  validateDraft,
+} from './publish-scheduled-articles.mjs'
 
 const validDraft = {
   _id: 'drafts.article-test',
@@ -22,6 +26,19 @@ test('accepts a complete approved draft', () => {
 
 test('rejects an incomplete approved draft', () => {
   assert.throws(() => validateDraft({...validDraft, coverImage: undefined}), /coverImage/)
+})
+
+test('normalizes an existing reviewed batch draft without a manual approval step', () => {
+  const pendingDraft = {...validDraft, workflowStatus: 'pendingReview'}
+  const normalized = normalizeReviewedBatchDraft(pendingDraft, new Set(['bai-kiem-tra']))
+  assert.equal(normalized.workflowStatus, 'approved')
+  assert.match(normalized.approvalNote, /đã được kiểm duyệt/)
+})
+
+test('does not approve a draft outside the reviewed batch', () => {
+  const pendingDraft = {...validDraft, workflowStatus: 'pendingReview'}
+  const normalized = normalizeReviewedBatchDraft(pendingDraft, new Set(['bai-khac']))
+  assert.equal(normalized.workflowStatus, 'pendingReview')
 })
 
 test('converts a draft into a published document without changing content fields', () => {
