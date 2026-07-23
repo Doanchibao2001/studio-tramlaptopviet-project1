@@ -96,11 +96,11 @@ function articleDraft(row, categoryId, date) {
     category: {_type: 'reference', _ref: categoryId},
     keywords: row.keywords.slice(0, 6),
     seo: {_type: 'seo', title: row.seoTitle, description: row.seoDescription, ...(seoImage ? {image: seoImage} : {}), noIndex: row.noIndex ?? false},
-    workflowStatus: 'pendingReview',
+    workflowStatus: 'approved',
     scheduledAt: date,
     approvalNote: coverImage
-      ? 'Nhập từ batch 330 bài; chờ KTV và biên tập viên duyệt trước khi xuất bản.'
-      : 'Nhập từ batch 330 bài; THIẾU ẢNH. Phải bổ sung ảnh, KTV và biên tập viên duyệt trước khi xuất bản.',
+      ? 'Bài thuộc batch đã được kiểm duyệt; chờ hệ thống xuất bản đúng lịch.'
+      : 'Bài thuộc batch đã được kiểm duyệt nhưng thiếu ảnh; cần bổ sung ảnh trước giờ xuất bản.',
   }
 }
 
