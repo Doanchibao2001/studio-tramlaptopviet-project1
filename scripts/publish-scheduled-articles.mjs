@@ -6,8 +6,14 @@ const PROJECT_ID = process.env.SANITY_PROJECT_ID || 'qnykgwoz'
 const DATASET = process.env.SANITY_DATASET || 'production'
 const API_VERSION = '2026-07-21'
 const DEFAULT_LIMIT = 10
+const FALLBACK_ASSET = 'image-f0a6c9e22fa30bf626fecf330e56e9de5d802570-1280x426-jpg'
 const REVIEWED_BATCH_PATH = new URL('./fixtures/sanity-batch-330.json', import.meta.url)
 const REVIEWED_BATCH_NOTE = 'Bài thuộc batch đã được kiểm duyệt; chờ hệ thống xuất bản đúng lịch.'
+const FALLBACK_IMAGE = {
+  _type: 'image',
+  asset: {_type: 'reference', _ref: FALLBACK_ASSET},
+  alt: 'Dịch vụ kiểm tra và sửa chữa laptop tại Trạm Laptop Việt',
+}
 
 function parseArgs(argv) {
   const result = {dryRun: false, limit: DEFAULT_LIMIT}
@@ -70,17 +76,24 @@ async function loadReviewedBatchSlugs() {
 }
 
 export function normalizeReviewedBatchDraft(document, reviewedSlugs) {
-  if (document?.workflowStatus === 'approved') return document
   if (!reviewedSlugs?.has(document?.slug?.current)) return document
-  return {...document, workflowStatus: 'approved', approvalNote: REVIEWED_BATCH_NOTE}
+  return {
+    ...document,
+    workflowStatus: 'approved',
+    approvalNote: REVIEWED_BATCH_NOTE,
+    coverImage: document.coverImage || FALLBACK_IMAGE,
+    seo: {...document.seo, image: document.seo?.image || FALLBACK_IMAGE},
+  }
 }
 
 async function approveReviewedBatchDrafts(reviewedSlugs, {dryRun = false} = {}) {
   const drafts = await query(
-    '*[_type == "article" && _id in path("drafts.**")]{_id,"slug":slug.current,workflowStatus}',
+    '*[_type == "article" && _id in path("drafts.**")]{_id,"slug":slug.current,workflowStatus,"hasCover":defined(coverImage.asset._ref),"hasSeoImage":defined(seo.image.asset._ref)}',
   )
   const pending = drafts.filter(
-    (draft) => reviewedSlugs.has(draft.slug) && draft.workflowStatus !== 'approved',
+    (draft) =>
+      reviewedSlugs.has(draft.slug) &&
+      (draft.workflowStatus !== 'approved' || !draft.hasCover || !draft.hasSeoImage),
   )
   log('reviewed_batch_approval_found', {count: pending.length, dryRun})
   if (dryRun || pending.length === 0) return pending.length
@@ -91,6 +104,10 @@ async function approveReviewedBatchDrafts(reviewedSlugs, {dryRun = false} = {}) 
       set: {
         workflowStatus: 'approved',
         approvalNote: REVIEWED_BATCH_NOTE,
+      },
+      setIfMissing: {
+        coverImage: FALLBACK_IMAGE,
+        'seo.image': FALLBACK_IMAGE,
       },
     },
   }))
