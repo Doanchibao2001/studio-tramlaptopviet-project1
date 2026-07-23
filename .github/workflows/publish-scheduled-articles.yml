@@ -4,6 +4,11 @@ on:
   schedule:
     # Vietnam UTC+7: 08:00, 13:00 and 19:00.
     - cron: '0 1,6,12 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/publish-scheduled-articles.yml'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -28,7 +33,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Publish up to 10 approved articles
+      - name: Publish scheduled articles
         env:
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
           SANITY_PROJECT_ID: qnykgwoz
@@ -38,6 +43,11 @@ jobs:
         run: |
           if [ "$EVENT_NAME" = "workflow_dispatch" ] && [ "$DRY_RUN" = "true" ]; then
             node scripts/publish-scheduled-articles.mjs --limit 10 --dry-run
+          elif [ "$EVENT_NAME" = "push" ]; then
+            # One-time catch-up when this workflow is changed on main.
+            # At 13:00 Vietnam time, up to 20 articles can be overdue.
+            node scripts/publish-scheduled-articles.mjs --limit 10
+            node scripts/publish-scheduled-articles.mjs --limit 10
           else
             node scripts/publish-scheduled-articles.mjs --limit 10
           fi
